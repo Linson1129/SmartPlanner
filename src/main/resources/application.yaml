@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: planner
+  docker:
+    compose:
+      enabled: false # 临时关闭:不自动执行 docker compose up
+  mvc:
+    servlet:
+      path: /api
+  datasource:
+    url: '${PLANNER_DB_URL:jdbc:mysql://127.0.0.1:3306/like_system?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false}'
+    username: '${PLANNER_DB_USERNAME:root}'
+    password: '${PLANNER_DB_PASSWORD:}'
+    driver-class-name: com.mysql.cj.jdbc.Driver
