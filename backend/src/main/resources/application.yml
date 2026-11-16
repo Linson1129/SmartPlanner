@@ -1,0 +1,59 @@
+server:
+  port: ${SMARTPLANNER_API_PORT:8080}
+  shutdown: graceful
+
+spring:
+  application:
+    name: smartplanner-server
+  datasource:
+    url: ${SMARTPLANNER_DB_URL:jdbc:mysql://127.0.0.1:3307/smartplanner?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai&characterEncoding=utf8&useUnicode=true}
+    username: ${SMARTPLANNER_DB_USERNAME:smartplanner}
+    password: ${SMARTPLANNER_DB_PASSWORD:smartplanner}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 5000
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        jdbc:
+          batch_size: 30
+        order_inserts: true
+        order_updates: true
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    default-property-inclusion: always
+  lifecycle:
+    timeout-per-shutdown-phase: 20s
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: never
+
+smartplanner:
+  engine:
+    base-url: ${SMARTPLANNER_ENGINE_URL:http://127.0.0.1:8000}
+  cors:
+    allowed-origins: ${SMARTPLANNER_CORS_ORIGINS:http://localhost:3000,http://127.0.0.1:3000}
+  weather:
+    city: ${SMARTPLANNER_WEATHER_CITY:澳门}
+    latitude: ${SMARTPLANNER_WEATHER_LATITUDE:22.1987}
+    longitude: ${SMARTPLANNER_WEATHER_LONGITUDE:113.5439}
+    timezone: ${SMARTPLANNER_WEATHER_TIMEZONE:Asia/Macau}
+  seed:
+    enabled: ${SMARTPLANNER_SEED_ENABLED:true}
+
+logging:
+  level:
+    com.smartplanner: INFO
+    org.hibernate.SQL: WARN

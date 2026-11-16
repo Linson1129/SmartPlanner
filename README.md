@@ -1,10 +1,10 @@
 # SmartPlanner
 
-> Development snapshot 02/25
+> Development snapshot 03/25
 
 ## Current stage
 
-Event model: Event entities, priorities, statuses and user profile models.
+Event API: CRUD endpoints, container relations and seed data.
 
 ## Stack
 
