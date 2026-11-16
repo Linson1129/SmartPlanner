@@ -1,0 +1,27 @@
+# runtime
+.runtime/
+*.log
+**/__pycache__/
+**/.pytest_cache/
+engine/.venv/
+.venv/
+
+# java
+backend/target/
+*.class
+
+# node
+web/node_modules/
+web/.next/
+web/out/
+web/coverage/
+web/*.tsbuildinfo
+
+# env
+.env
+.env.local
+.DS_Store
+
+# load-test output
+tests/jmeter/results.jtl
+tests/jmeter/report/
