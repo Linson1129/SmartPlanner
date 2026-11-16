@@ -1,10 +1,10 @@
 # SmartPlanner
 
-> Development snapshot 01/25
+> Development snapshot 02/25
 
 ## Current stage
 
-Project setup: Initial project structure, local scripts and database schema.
+Event model: Event entities, priorities, statuses and user profile models.
 
 ## Stack
 
