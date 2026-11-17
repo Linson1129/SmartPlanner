@@ -1,10 +1,10 @@
 # SmartPlanner
 
-> Development snapshot 05/25
+> Development snapshot 06/25
 
 ## Current stage
 
-Holidays and preferences: Holiday data, region selection and reminder preferences.
+DDL overview: DDL overview based on the expected finish time.
 
 ## Stack
 
