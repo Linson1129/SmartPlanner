@@ -1,10 +1,10 @@
 # SmartPlanner
 
-> Development snapshot 03/25
+> Development snapshot 04/25
 
 ## Current stage
 
-Event API: CRUD endpoints, container relations and seed data.
+Conflict engine: Conflict analysis for overlapping events and container children.
 
 ## Stack
 
