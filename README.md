@@ -1,10 +1,10 @@
 # SmartPlanner
 
-> Development snapshot 04/25
+> Development snapshot 05/25
 
 ## Current stage
 
-Conflict engine: Conflict analysis for overlapping events and container children.
+Holidays and preferences: Holiday data, region selection and reminder preferences.
 
 ## Stack
 
