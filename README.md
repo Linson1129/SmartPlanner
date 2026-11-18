@@ -1,10 +1,10 @@
 # SmartPlanner
 
-> Development snapshot 07/25
+> Development snapshot 08/25
 
 ## Current stage
 
-Rescheduling: Suggested shifts and a confirmation flow for schedule changes.
+MUI foundation: MUI theme, API client, date utilities and base styles.
 
 ## Stack
 
