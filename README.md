@@ -1,10 +1,10 @@
 # SmartPlanner
 
-> Development snapshot 08/25
+> Development snapshot 09/25
 
 ## Current stage
 
-MUI foundation: MUI theme, API client, date utilities and base styles.
+Day view: Daily timeline, priority lanes, containers and drag interaction.
 
 ## Stack
 
