@@ -1,10 +1,10 @@
 # SmartPlanner
 
-> Development snapshot 06/25
+> Development snapshot 07/25
 
 ## Current stage
 
-DDL overview: DDL overview based on the expected finish time.
+Rescheduling: Suggested shifts and a confirmation flow for schedule changes.
 
 ## Stack
 
