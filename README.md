@@ -1,10 +1,10 @@
 # SmartPlanner
 
-> Development snapshot 11/25
+> Development snapshot 12/25
 
 ## Current stage
 
-Month view: Monthly calendar, cross-day plans and mini calendar.
+Event drawer: Event details, create/edit form and completion actions.
 
 ## Stack
 
