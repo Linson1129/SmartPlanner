@@ -1,10 +1,10 @@
 # SmartPlanner
 
-> Development snapshot 10/25
+> Development snapshot 11/25
 
 ## Current stage
 
-Week view: Seven-day timeline, all-day spans and holiday markers.
+Month view: Monthly calendar, cross-day plans and mini calendar.
 
 ## Stack
 
