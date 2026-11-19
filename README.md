@@ -1,10 +1,10 @@
 # SmartPlanner
 
-> Development snapshot 09/25
+> Development snapshot 10/25
 
 ## Current stage
 
-Day view: Daily timeline, priority lanes, containers and drag interaction.
+Week view: Seven-day timeline, all-day spans and holiday markers.
 
 ## Stack
 
