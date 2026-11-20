@@ -1,10 +1,10 @@
 # SmartPlanner
 
-> Development snapshot 13/25
+> Development snapshot 14/25
 
 ## Current stage
 
-Conflict dialog: Conflict summary, suggested changes and apply action.
+Reminders: Presence heartbeat, soft reminders and strong reminders.
 
 ## Stack
 
