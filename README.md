@@ -1,10 +1,10 @@
 # SmartPlanner
 
-> Development snapshot 12/25
+> Development snapshot 13/25
 
 ## Current stage
 
-Event drawer: Event details, create/edit form and completion actions.
+Conflict dialog: Conflict summary, suggested changes and apply action.
 
 ## Stack
 
