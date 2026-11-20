@@ -1,10 +1,10 @@
 # SmartPlanner
 
-> Development snapshot 14/25
+> Development snapshot 15/25
 
 ## Current stage
 
-Reminders: Presence heartbeat, soft reminders and strong reminders.
+DDL and settings: DDL card, user settings and reminder preview.
 
 ## Stack
 
