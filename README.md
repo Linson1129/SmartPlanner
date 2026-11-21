@@ -1,10 +1,10 @@
 # SmartPlanner
 
-> Development snapshot 16/25
+> Development snapshot 17/25
 
 ## Current stage
 
-Navigation: MUI sidebar, top navigation and collapsible layout.
+Weather API: Weather forecast provider, caching and date mapping.
 
 ## Stack
 

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import logging
-from datetime import datetime
+from datetime import date, datetime
 
 from fastapi import FastAPI, HTTPException, Query
 
@@ -13,8 +13,10 @@ from .models import (
     HolidayEntryOut,
     HolidayRegion,
     HolidayResponse,
+    WeatherResponse,
 )
 from .rules import analyze
+from .weather import fetch_weather
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")
 logger = logging.getLogger("smartplanner.engine")
@@ -68,12 +70,36 @@ def analyze_endpoint(request: AnalyzeRequest) -> AnalysisOut:
     return result
 
 
+@app.get("/weather", response_model=WeatherResponse)
+def weather(
+    from_date: date = Query(alias="from"),
+    to_date: date = Query(alias="to"),
+    latitude: float = Query(default=22.1987, ge=-90, le=90),
+    longitude: float = Query(default=113.5439, ge=-180, le=180),
+    timezone: str = Query(default="Asia/Macau", max_length=64),
+    city: str = Query(default="澳门", max_length=60),
+) -> WeatherResponse:
+    if to_date < from_date:
+        raise HTTPException(status_code=400, detail="weather range is invalid")
+    if (to_date - from_date).days + 1 > 16:
+        raise HTTPException(status_code=400, detail="weather range is limited to 15 days")
+    payload = fetch_weather(
+        from_date,
+        to_date,
+        latitude=latitude,
+        longitude=longitude,
+        timezone=timezone,
+        city=city,
+    )
+    return WeatherResponse.model_validate(payload)
+
+
 @app.get("/meta")
 def meta() -> dict[str, object]:
     return {
         "service": "smartplanner-engine",
         "version": "0.1.0",
         "calendarYear": 2026,
-        "features": ["holidays", "conflicts", "reschedule"],
+        "features": ["holidays", "conflicts", "reschedule", "weather"],
         "generatedAt": datetime.now().isoformat(timespec="seconds"),
     }
