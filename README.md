@@ -1,10 +1,10 @@
 # SmartPlanner
 
-> Development snapshot 17/25
+> Development snapshot 18/25
 
 ## Current stage
 
-Weather API: Weather forecast provider, caching and date mapping.
+Weather-aware events: Weather-sensitive events and rain warnings.
 
 ## Stack
 
