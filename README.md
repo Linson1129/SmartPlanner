@@ -1,10 +1,10 @@
 # SmartPlanner
 
-> Development snapshot 19/25
+> Development snapshot 20/25
 
 ## Current stage
 
-Quick-add parser: Local date/time/range parser for quick entry.
+Quick-add dialog: Draft preview and form prefill for quick add.
 
 ## Stack
 
