@@ -1,10 +1,10 @@
 # SmartPlanner
 
-> Development snapshot 18/25
+> Development snapshot 19/25
 
 ## Current stage
 
-Weather-aware events: Weather-sensitive events and rain warnings.
+Quick-add parser: Local date/time/range parser for quick entry.
 
 ## Stack
 

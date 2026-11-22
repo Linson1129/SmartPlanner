@@ -13,8 +13,11 @@ from .models import (
     HolidayEntryOut,
     HolidayRegion,
     HolidayResponse,
+    NlpDraftOut,
+    NlpRequest,
     WeatherResponse,
 )
+from .nlp import parse_sentence
 from .rules import analyze
 from .weather import fetch_weather
 
@@ -24,7 +27,7 @@ logger = logging.getLogger("smartplanner.engine")
 app = FastAPI(
     title="SmartPlanner Scheduling Engine",
     version="0.1.0",
-    description="Conflict detection, holiday awareness and assisted rescheduling.",
+    description="Conflict detection, holiday awareness, weather and NLP quick-add.",
 )
 
 
@@ -94,12 +97,17 @@ def weather(
     return WeatherResponse.model_validate(payload)
 
 
+@app.post("/nlp/parse", response_model=NlpDraftOut)
+def nlp_parse(request: NlpRequest) -> NlpDraftOut:
+    return parse_sentence(request.text, request.now)
+
+
 @app.get("/meta")
 def meta() -> dict[str, object]:
     return {
         "service": "smartplanner-engine",
         "version": "0.1.0",
         "calendarYear": 2026,
-        "features": ["holidays", "conflicts", "reschedule", "weather"],
+        "features": ["holidays", "conflicts", "reschedule", "weather", "nlp"],
         "generatedAt": datetime.now().isoformat(timespec="seconds"),
     }
