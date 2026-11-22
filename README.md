@@ -1,10 +1,10 @@
 # SmartPlanner
 
-> Development snapshot 20/25
+> Development snapshot 21/25
 
 ## Current stage
 
-Quick-add dialog: Draft preview and form prefill for quick add.
+Application shell: Connect the views, drawers and reminders into the app shell.
 
 ## Stack
 
