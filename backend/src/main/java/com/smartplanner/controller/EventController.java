@@ -2,6 +2,7 @@ package com.smartplanner.controller;
 
 import com.smartplanner.dto.DeleteResult;
 import com.smartplanner.dto.EventDto;
+import com.smartplanner.dto.EventMoveRequest;
 import com.smartplanner.dto.EventSaveResponse;
 import com.smartplanner.dto.EventUpsertRequest;
 import com.smartplanner.service.EventService;
@@ -62,6 +63,11 @@ public class EventController {
     @PatchMapping("/{id}/complete")
     public EventDto complete(@PathVariable Long id) {
         return eventService.complete(id);
+    }
+
+    @PatchMapping("/{id}/move")
+    public EventSaveResponse move(@PathVariable Long id, @Valid @RequestBody EventMoveRequest request) {
+        return eventService.move(id, request);
     }
 
     @DeleteMapping("/{id}")

@@ -90,6 +90,25 @@ public class EventService {
     }
 
     @Transactional
+    public EventSaveResponse move(Long id, com.smartplanner.dto.EventMoveRequest request) {
+        ScheduleEvent event = entity(id);
+        if (event.getType() == EventType.GOAL && event.getEndAt() == null) {
+            throw new BadRequestException("进行中的目标不能直接拖动结束时间");
+        }
+        if (event.getStatus() == EventStatus.DONE || event.getStatus() == EventStatus.CANCELLED) {
+            throw new BadRequestException("已完成或已取消的日程不能重新拖动");
+        }
+        if (!request.endAt().isAfter(request.startAt())) {
+            throw new BadRequestException("结束时间必须晚于开始时间");
+        }
+        event.setStartAt(request.startAt().withNano(0));
+        event.setEndAt(request.endAt().withNano(0));
+        repository.save(event);
+        AnalysisDto analysis = analysisService.analyze(event);
+        return new EventSaveResponse(mapper.toDto(event), analysis);
+    }
+
+    @Transactional
     public EventDto complete(Long id) {
         ScheduleEvent event = entity(id);
         if (event.getStatus() == EventStatus.DONE) {

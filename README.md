@@ -1,10 +1,10 @@
 # SmartPlanner
 
-> Development snapshot 21/25
+> Development snapshot 22/25
 
 ## Current stage
 
-Application shell: Connect the views, drawers and reminders into the app shell.
+Drag to reschedule: Move events on the day timeline with conflict analysis.
 
 ## Stack
 
