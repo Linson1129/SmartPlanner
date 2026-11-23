@@ -3,6 +3,7 @@ import "./globals.css";
 import "./styles/shell.css";
 import "./styles/views.css";
 import "./styles/panels.css";
+import "./styles/minimal.css";
 
 export const metadata: Metadata = {
   title: "SmartPlanner · 个人日程",
