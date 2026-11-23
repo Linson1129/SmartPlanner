@@ -1,10 +1,10 @@
 # SmartPlanner
 
-> Development snapshot 22/25
+> Development snapshot 23/25
 
 ## Current stage
 
-Drag to reschedule: Move events on the day timeline with conflict analysis.
+Frontend/backend separation: Direct API access, CORS and independent deployment.
 
 ## Stack
 
