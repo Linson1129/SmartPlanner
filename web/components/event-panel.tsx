@@ -304,11 +304,11 @@ export function EventPanel({
       onClose={onClose}
       slotProps={{ paper: { sx: { width: { xs: "100%", sm: 470 }, backgroundImage: "none" } } }}
     >
-      <aside className="event-panel mui-event-panel" role="dialog" aria-modal="true" aria-label={isCreate ? "新建安排" : "日程详情"}>
+      <aside className="event-panel mui-event-panel" role="dialog" aria-modal="true" aria-label={isCreate ? "新建事件" : "日程详情"}>
         <header className="panel-head">
           <div>
             <p className="panel-kicker">{isCreate ? "NEW ENTRY" : editing ? "EDIT ENTRY" : "SCHEDULE DETAIL"}</p>
-            <h2>{isCreate ? "把一段时间排进来" : editing ? "修改这项安排" : "这项安排"}</h2>
+            <h2>{isCreate ? "新建事件" : editing ? "修改这项安排" : "这项安排"}</h2>
           </div>
           <IconButton onClick={onClose} aria-label="关闭" size="small">
             <X size={18} />
