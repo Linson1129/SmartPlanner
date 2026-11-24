@@ -185,7 +185,6 @@ export function WeekView({ events, date, now, holidays, weatherByDate, onCreateA
                       const event = segment.event;
                       const top = (segment.startMin / 60) * HOUR_HEIGHT;
                       const height = Math.max(30, ((segment.endMin - segment.startMin) / 60) * HOUR_HEIGHT - 2);
-                      const childCount = events.filter((item) => item.parentId === event.id).length;
                       return (
                         <button
                           key={`container-${event.id}`}
@@ -202,9 +201,6 @@ export function WeekView({ events, date, now, holidays, weatherByDate, onCreateA
                             {event.goalCompleted ? <Target size={10} /> : <Layers size={10} />}
                             {event.title}
                           </span>
-                          <span className="week-container-meta">
-                            {event.goalCompleted ? "目标已完成" : `${childCount} 个并行事件`}
-                          </span>
                         </button>
                       );
                     })}
@@ -215,8 +211,12 @@ export function WeekView({ events, date, now, holidays, weatherByDate, onCreateA
                     ) : null}
                     {regularEntries.map(({ segment, placement }) => {
                       const event = segment.event;
+                      const parent = event.parentId
+                        ? entries.find(({ segment: parentSegment }) => parentSegment.event.id === event.parentId)
+                        : null;
+                      const visibleEndMin = parent ? Math.min(segment.endMin, parent.segment.endMin) : segment.endMin;
                       const top = (segment.startMin / 60) * HOUR_HEIGHT;
-                      const height = Math.max(22, ((segment.endMin - segment.startMin) / 60) * HOUR_HEIGHT - 2);
+                      const height = Math.max(22, ((visibleEndMin - segment.startMin) / 60) * HOUR_HEIGHT - 2);
                       const left = (placement.column / placement.columnCount) * 100;
                       const width = (1 / placement.columnCount) * 100;
                       return (

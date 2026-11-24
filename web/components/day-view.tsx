@@ -188,6 +188,9 @@ export function DayView({ events, date, now, holiday, weatherDay, loading, onCre
                         now={now}
                         onOpen={onOpenEvent}
                         onMove={onMoveEvent}
+                        containerEndMin={segment.event.parentId
+                          ? layout.containers.find((container) => container.event.id === segment.event.parentId)?.endMin ?? null
+                          : null}
                       />
                     ))}
                   </div>
@@ -200,8 +203,6 @@ export function DayView({ events, date, now, holiday, weatherDay, loading, onCre
                 <ContainerShell
                   key={`shell-${segment.event.id}`}
                   segment={segment}
-                  events={events}
-                  now={now}
                   onOpen={onOpenEvent}
                 />
               ))}
@@ -260,11 +261,13 @@ function EventBlock({
   now,
   onOpen,
   onMove,
+  containerEndMin,
 }: {
   segment: DaySegment;
   now: Date;
   onOpen: (event: ScheduleEvent) => void;
   onMove: (event: ScheduleEvent, start: Date, end: Date) => void;
+  containerEndMin: number | null;
 }) {
   const { event } = segment;
   const [dragOffset, setDragOffset] = useState(0);
@@ -272,9 +275,13 @@ function EventBlock({
   const dragRef = useRef<{ startX: number; startAt: Date; endAt: Date; moved: boolean } | null>(null);
   const suppressClickRef = useRef(false);
   const durationWidth = ((segment.endMin - segment.startMin) / 60) * HOUR_WIDTH - 2;
-  const width = Math.max(46, durationWidth, estimateTitleWidth(event.title));
-  const extended = width > durationWidth + 1;
   const left = (segment.startMin / 60) * HOUR_WIDTH + 1;
+  const desiredWidth = Math.max(46, durationWidth, estimateTitleWidth(event.title));
+  const containerLimit = containerEndMin === null
+    ? Number.POSITIVE_INFINITY
+    : (containerEndMin / 60) * HOUR_WIDTH - left - 4;
+  const width = Math.max(20, Math.min(desiredWidth, containerLimit));
+  const extended = width > durationWidth + 1;
   const top = 8 + segment.row * 68;
   const casualActive = isCasualActive(event, now);
   const draggable = !segment.continuesBefore && !segment.continuesAfter && event.status !== "DONE" && event.status !== "CANCELLED";
@@ -414,19 +421,14 @@ function GoalBlock({
 
 function ContainerShell({
   segment,
-  events,
-  now,
   onOpen,
 }: {
   segment: DaySegment;
-  events: ScheduleEvent[];
-  now: Date;
   onOpen: (event: ScheduleEvent) => void;
 }) {
   const { event } = segment;
   const left = (segment.startMin / 60) * HOUR_WIDTH + 1;
   const width = Math.max(24, ((segment.endMin - segment.startMin) / 60) * HOUR_WIDTH - 2);
-  const children = events.filter((item) => item.parentId === event.id);
   return (
     <button
       type="button"
@@ -443,16 +445,6 @@ function ContainerShell({
         {event.goalCompleted ? <Target size={12} /> : <Layers size={12} />}
         <span>{event.title}</span>
         <em>{event.goalCompleted ? "目标已完成" : "容器"}</em>
-      </span>
-      <span className="container-shell-meta">
-        {event.goalCompleted
-          ? `实际投入 ${eventElapsed(event, now)} · 可继续放入事件`
-          : `${children.length} 个并行事件 · 允许重叠`}
-      </span>
-      <span className="container-shell-hint">
-        {children.map((child) => (
-          <i key={child.id} className={`type-${child.type.toLowerCase()}`} />
-        ))}
       </span>
     </button>
   );
