@@ -14,6 +14,7 @@ interface NlpDialogProps {
   open: boolean;
   onClose: () => void;
   onUseDraft: (draft: NlpDraft) => void;
+  onCreateDraft: (draft: NlpDraft) => void;
 }
 
 const EXAMPLES = [
@@ -24,7 +25,7 @@ const EXAMPLES = [
   "今晚8点看电影",
 ];
 
-export function NlpDialog({ open, onClose, onUseDraft }: NlpDialogProps) {
+export function NlpDialog({ open, onClose, onUseDraft, onCreateDraft }: NlpDialogProps) {
   const [text, setText] = useState("");
   const [draft, setDraft] = useState<NlpDraft | null>(null);
   const [loading, setLoading] = useState(false);
@@ -90,8 +91,7 @@ export function NlpDialog({ open, onClose, onUseDraft }: NlpDialogProps) {
               <Chip key={example} label={example} size="small" variant="outlined" onClick={() => { setText(example); setDraft(null); }} />
             ))}
           </Stack>
-          <Stack direction="row" sx={{ justifyContent: "space-between", alignItems: "center", mt: 2 }}>
-            <Typography variant="caption" color="text.secondary">自然语言解析为日程草稿，确认后再保存</Typography>
+          <Stack direction="row" sx={{ justifyContent: "flex-end", alignItems: "center", mt: 2 }}>
             <Button type="submit" variant="contained" disabled={loading} startIcon={loading ? <Loader2 size={15} className="spin" /> : <Sparkles size={15} />}>
               {loading ? "正在解析…" : "解析成草稿"}
             </Button>
@@ -120,7 +120,8 @@ export function NlpDialog({ open, onClose, onUseDraft }: NlpDialogProps) {
             </Stack>
             <Stack direction="row" spacing={1} sx={{ justifyContent: "flex-end", mt: 2 }}>
               <Button variant="text" onClick={() => setDraft(null)}>重新输入</Button>
-              <Button variant="contained" startIcon={<Check size={16} />} onClick={() => onUseDraft(draft)}>填入表单</Button>
+              <Button variant="outlined" onClick={() => onUseDraft(draft)}>填入表单</Button>
+              <Button variant="contained" startIcon={<Check size={16} />} onClick={() => onCreateDraft(draft)}>直接创建</Button>
             </Stack>
           </Paper>
         ) : null}

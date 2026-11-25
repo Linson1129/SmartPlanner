@@ -451,6 +451,20 @@ def parse_sentence(text: str, now: datetime | None = None) -> NlpDraftOut:
         if end <= start:
             end = start + timedelta(hours=1)
 
+    # A weekday or "today/tonight" that has already passed should move forward,
+    # not create an event in the past. Explicit calendar dates are left as typed.
+    shift_days = 0
+    if start <= now:
+        if date_text in ("今天", "今晚"):
+            shift_days = 1
+        elif date_text and re.fullmatch(r"(?:周|星期)[一二三四五六日天]", date_text):
+            shift_days = 7
+    if shift_days:
+        target_date += timedelta(days=shift_days)
+        start += timedelta(days=shift_days)
+        if end is not None:
+            end += timedelta(days=shift_days)
+
     title = _clean_title(text, matched, location)
 
     confidence = 0.42 + date_confidence + time_info.confidence + duration_confidence

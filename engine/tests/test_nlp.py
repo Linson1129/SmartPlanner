@@ -130,3 +130,29 @@ def test_nlp_endpoint_accepts_colloquial_meeting():
     assert payload["title"] == "开会"
     assert payload["startAt"] == "2026-11-07T16:00:00"
     assert payload["endAt"] == "2026-11-07T18:00:00"
+
+
+def test_past_weekday_rolls_to_next_week():
+    now = datetime(2026, 11, 6, 18, 0)  # Friday evening
+    draft = parse_sentence("周五下午3点开会", now)
+    assert draft.start_at == datetime(2026, 11, 13, 15, 0)
+    assert draft.end_at == datetime(2026, 11, 13, 16, 0)
+
+
+def test_past_tonight_rolls_to_tomorrow():
+    now = datetime(2026, 11, 6, 22, 0)
+    draft = parse_sentence("今晚8点看电影", now)
+    assert draft.start_at == datetime(2026, 11, 7, 20, 0)
+    assert draft.end_at == datetime(2026, 11, 7, 21, 0)
+
+
+def test_sparse_quick_add_still_has_usable_defaults():
+    draft = parse_sentence("买菜", NOW)
+    assert draft.title == "买菜"
+    assert draft.start_at > NOW
+    assert draft.end_at - draft.start_at == __import__("datetime").timedelta(hours=1)
+
+    draft = parse_sentence("明天下午3点", NOW)
+    assert draft.title == "新安排"
+    assert draft.start_at == datetime(2026, 11, 7, 15, 0)
+    assert draft.end_at == datetime(2026, 11, 7, 16, 0)

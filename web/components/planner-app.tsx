@@ -9,6 +9,7 @@ import type {
   HeartbeatResponse,
   Holiday,
   HolidayRegion,
+  NlpDraft,
   Priority,
   Profile,
   Reminder,
@@ -31,6 +32,7 @@ import { effectiveEnd } from "@/lib/layout";
 import {
   ApiRequestError,
   applySchedule,
+  createEvent,
   fetchEvents,
   fetchHolidays,
   fetchOverview,
@@ -275,8 +277,8 @@ export function PlannerApp() {
     });
   }, [openCreate]);
 
-  const handleSaved = useCallback((event: ScheduleEvent, analysis: Analysis) => {
-    const wasCreate = panel?.mode === "create";
+  const handleSaved = useCallback((event: ScheduleEvent, analysis: Analysis, wasCreateOverride?: boolean) => {
+    const wasCreate = wasCreateOverride ?? panel?.mode === "create";
     setPanel(null);
     refresh();
     if (!analysis.engineAvailable) {
@@ -330,6 +332,38 @@ export function PlannerApp() {
       });
     }
   }, [panel?.mode, push, refresh, weather]);
+
+  const handleNlpCreate = useCallback(async (draft: NlpDraft) => {
+    const start = parseDateTime(draft.startAt);
+    if (!start) {
+      push({ tone: "error", title: "无法创建", message: "这句话里没有可用的开始时间" });
+      return;
+    }
+    const end = parseDateTime(draft.endAt);
+    setNlpOpen(false);
+    try {
+      const response = await createEvent({
+        title: draft.title || "新安排",
+        notes: draft.notes,
+        type: draft.type,
+        priority: draft.priority,
+        startAt: toApiDateTime(start),
+        endAt: draft.type === "GOAL" ? null : toApiDateTime(end ?? new Date(start.getTime() + 60 * 60 * 1000)),
+        dueAt: null,
+        parentId: null,
+        location: draft.location ?? "",
+        weatherSensitive: false,
+        lookaheadDays: 0,
+      });
+      handleSaved(response.event, response.analysis, true);
+    } catch (error) {
+      push({
+        tone: "error",
+        title: "创建失败",
+        message: error instanceof ApiRequestError ? error.message : "日程暂时没有保存成功",
+      });
+    }
+  }, [handleSaved, push]);
 
   const handleComplete = useCallback((event: ScheduleEvent) => {
     setPanel({ mode: "view", event, key: `view-${event.id}-${Date.now()}` });
@@ -622,6 +656,7 @@ export function PlannerApp() {
       <NlpDialog
         open={nlpOpen}
         onClose={() => setNlpOpen(false)}
+        onCreateDraft={(draft) => { void handleNlpCreate(draft); }}
         onUseDraft={(draft) => {
           const start = parseDateTime(draft.startAt);
           if (!start) return;
