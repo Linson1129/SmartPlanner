@@ -58,7 +58,7 @@ else
 fi
 
 echo "[4/4] Next.js web"
-if curl -sf http://127.0.0.1:3000 >/dev/null 2>&1; then
+if curl -sf http://127.0.0.1:3001 >/dev/null 2>&1; then
   echo "  web already running"
 else
   if [[ ! -d "$ROOT/web/node_modules" ]]; then
@@ -70,16 +70,16 @@ else
     nohup pnpm dev > "$LOGS/web.log" 2>&1 &
     echo $! > "$RUN/web.pid"
   )
-  wait_http http://127.0.0.1:3000 "web"
+  wait_http http://127.0.0.1:3001 "web"
 fi
 
 cat <<INFO
 
 SmartPlanner is running:
-  Web       http://127.0.0.1:3000
+  Web       http://127.0.0.1:3001
   Java API  http://127.0.0.1:8080/api/overview
   Engine    http://127.0.0.1:8000/health
-  MySQL     127.0.0.1:${SMARTPLANNER_MYSQL_PORT:-3307}/${SMARTPLANNER_DB_NAME:-smartplanner}
+  MySQL     127.0.0.1:${SMARTPLANNER_MYSQL_PORT:-3308}/${SMARTPLANNER_DB_NAME:-smartplanner}
 
 Logs: $LOGS
 Stop: $ROOT/scripts/stop-all.sh

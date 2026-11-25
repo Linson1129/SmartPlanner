@@ -11,10 +11,10 @@
 
 ```mermaid
 flowchart LR
-  U[Browser] -->|HTTP| W[Next.js :3000]
+  U[Browser] -->|HTTP| W[Next.js :3001]
   W -->|HTTP + CORS direct| J[Java API :8080]
   J -->|/analyze /holidays /weather /nlp| P[Python Engine :8000]
-  J -->|JDBC| DB[(MySQL :3307)]
+  J -->|JDBC| DB[(MySQL :3308)]
   U -. 8s heartbeat .-> J
   J -. due reminders .-> U
 ```
@@ -198,7 +198,7 @@ erDiagram
 
 - Web、Java、Python、MySQL 是四个独立进程；
 - Web 的 API 基址由构建期变量 `NEXT_PUBLIC_API_BASE_URL` 决定（默认 `http://127.0.0.1:8080`）；
-- Java 的 CORS 来源由 `SMARTPLANNER_CORS_ORIGINS` 配置，默认允许本地 3000；
+- Java 的 CORS 来源由 `SMARTPLANNER_CORS_ORIGINS` 配置，默认允许本地 3001；
 - 没有 Next.js rewrite，因此 Web 可以独立部署在任意静态/Node 主机；
 - Java 仍然是唯一写入 MySQL 的服务，Python 仍然只由 Java 调用。
 
@@ -208,7 +208,7 @@ erDiagram
 - 事件标题、备注、地点有长度校验；日期和枚举错误由全局异常处理器转成 400；
 - 不引入富文本 / HTML 渲染，避免存储型 XSS；
 - Python 引擎只在 127.0.0.1 监听，由 Java 调用；
-- MySQL 项目实例只监听 127.0.0.1:3307，使用独立的项目数据目录。
+- MySQL 项目实例只监听 127.0.0.1:3308，使用独立的项目数据目录。
 
 ## 8. 测试策略
 

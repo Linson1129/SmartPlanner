@@ -30,7 +30,7 @@ kill_pid "$RUN/web.pid" "web"
 kill_pid "$RUN/backend.pid" "backend"
 kill_pid "$RUN/engine.pid" "engine"
 # `pnpm dev` may leave the Next child process behind; make sure the ports are free.
-kill_port 3000 "web"
+kill_port 3001 "web"
 kill_port 8080 "backend"
 kill_port 8000 "engine"
 "$ROOT/scripts/mysql.sh" stop
