@@ -7,15 +7,17 @@
 - Node.js 24
 - Python 3.13
 - MySQL 9
+- Flutter 3.50
 - JMeter 5.6
 
 ## Automated tests
 
 | Suite | Command | Result |
 | --- | --- | --- |
-| Python engine | `cd engine && .venv/bin/pytest` | 35 passed |
+| Python engine | `cd engine && .venv/bin/pytest` | 38 passed |
 | Java API | `cd backend && mvn test` | 11 passed |
 | Frontend | `cd web && pnpm test` | 17 passed |
+| Flutter mobile | `cd mobile && flutter test` | 1 passed |
 | Production build | `cd web && pnpm build` | passed |
 | Smoke | `./scripts/smoke.sh` | 18 checks passed |
 
@@ -30,7 +32,7 @@
 - Goal completion converts a goal into a container and records completed time.
 - Soft/strong reminder selection based on browser presence.
 - Weather mapping, fallback behavior and weather-sensitive event fields.
-- Chinese date/time/range parsing and NLP draft generation.
+- Chinese date/time/range parsing, past-time rollover and quick-add defaults.
 - Day/week/month layout calculations and cross-day event segmentation.
 
 ## Manual checks
@@ -38,9 +40,9 @@
 - Day, week and month navigation.
 - Create, edit, complete and delete events.
 - Conflict dialog and applying a suggested change.
-- Container children and goal completion.
+- Container children, visual containment and goal completion.
 - Weather chip and rainy-day reminder.
-- Natural-language quick add and form prefill.
+- Natural-language quick add, direct creation and form prefill.
 - Drag-to-reschedule in the day view.
 - Light theme and layout consistency.
 - Collapsible sidebar on desktop; drawer on mobile.
