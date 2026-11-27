@@ -8,6 +8,7 @@ Flutter client skeleton for SmartPlanner.
 - Today, Week, and Settings navigation destinations
 - Typed event model and HTTP client
 - Today event list with loading, error, empty, and refresh states
+- Create-event bottom sheet with title, type, priority, start/end time, and location
 - Widget test with an injected repository
 
 The Week and Settings screens are placeholders for the next mobile iteration. The Web application remains the reference implementation.
@@ -40,6 +41,7 @@ lib/
     app_config.dart
     planner_repository.dart
   features/
+    create/create_event_sheet.dart
     today/today_page.dart
     placeholders/placeholder_page.dart
   models/schedule_event.dart

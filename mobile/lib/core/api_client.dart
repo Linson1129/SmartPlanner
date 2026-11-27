@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
+import '../models/create_event_input.dart';
 import '../models/schedule_event.dart';
 import 'app_config.dart';
 
@@ -34,7 +35,8 @@ class ApiClient {
     );
 
     try {
-      final response = await _client.get(uri).timeout(const Duration(seconds: 8));
+      final response =
+          await _client.get(uri).timeout(const Duration(seconds: 8));
       if (response.statusCode < 200 || response.statusCode >= 300) {
         throw ApiException('服务返回 ${response.statusCode}');
       }
@@ -50,6 +52,35 @@ class ApiClient {
       rethrow;
     } catch (_) {
       throw const ApiException('无法连接 SmartPlanner 服务');
+    }
+  }
+
+  Future<ScheduleEvent> createEvent(CreateEventInput input) async {
+    final uri = Uri.parse('$baseUrl/api/events');
+    try {
+      final response = await _client
+          .post(
+            uri,
+            headers: const {'Content-Type': 'application/json'},
+            body: jsonEncode(input.toJson()),
+          )
+          .timeout(const Duration(seconds: 8));
+      if (response.statusCode < 200 || response.statusCode >= 300) {
+        throw ApiException('服务返回 ${response.statusCode}');
+      }
+      final decoded = jsonDecode(utf8.decode(response.bodyBytes));
+      if (decoded is! Map<String, dynamic>) {
+        throw const ApiException('事件数据格式不正确');
+      }
+      final event = decoded['event'];
+      if (event is! Map<String, dynamic>) {
+        throw const ApiException('事件数据格式不正确');
+      }
+      return ScheduleEvent.fromJson(event);
+    } on ApiException {
+      rethrow;
+    } catch (_) {
+      throw const ApiException('无法创建事件');
     }
   }
 

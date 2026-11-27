@@ -1,8 +1,11 @@
+import '../models/create_event_input.dart';
 import '../models/schedule_event.dart';
 import 'api_client.dart';
 
 abstract class PlannerRepository {
   Future<List<ScheduleEvent>> eventsForDay(DateTime day);
+
+  Future<ScheduleEvent> createEvent(CreateEventInput input);
 }
 
 class ApiPlannerRepository implements PlannerRepository {
@@ -13,5 +16,10 @@ class ApiPlannerRepository implements PlannerRepository {
   @override
   Future<List<ScheduleEvent>> eventsForDay(DateTime day) {
     return _client.eventsForDay(day);
+  }
+
+  @override
+  Future<ScheduleEvent> createEvent(CreateEventInput input) {
+    return _client.createEvent(input);
   }
 }

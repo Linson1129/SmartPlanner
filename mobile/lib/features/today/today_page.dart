@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/planner_repository.dart';
 import '../../models/schedule_event.dart';
+import '../create/create_event_sheet.dart';
 
 class TodayPage extends StatefulWidget {
   const TodayPage({required this.repository, super.key});
@@ -23,14 +24,35 @@ class _TodayPageState extends State<TodayPage> {
 
   Future<void> _reload() async {
     final next = widget.repository.eventsForDay(DateTime.now());
-    setState(() => _events = next);
+    setState(() {
+      _events = next;
+    });
     await next;
+  }
+
+  Future<void> _openCreate() async {
+    final created = await showModalBottomSheet<ScheduleEvent>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      showDragHandle: false,
+      builder: (context) => CreateEventSheet(repository: widget.repository),
+    );
+    if (created != null) {
+      await _reload();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final today = DateTime.now();
     return Scaffold(
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _openCreate,
+        tooltip: '新建事件',
+        icon: const Icon(Icons.add_rounded),
+        label: const Text('新建事件'),
+      ),
       appBar: AppBar(
         title: const Text('SmartPlanner'),
         centerTitle: false,
@@ -45,7 +67,7 @@ class _TodayPageState extends State<TodayPage> {
       body: RefreshIndicator(
         onRefresh: _reload,
         child: ListView(
-          padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 96),
           children: [
             Text(
               '${today.month} 月 ${today.day} 日',
@@ -209,7 +231,8 @@ class _EmptyState extends StatelessWidget {
       ),
       child: const Column(
         children: [
-          Icon(Icons.event_available_rounded, size: 28, color: Color(0xFF64748B)),
+          Icon(Icons.event_available_rounded,
+              size: 28, color: Color(0xFF64748B)),
           SizedBox(height: 10),
           Text(
             '今天还没有安排',
@@ -243,7 +266,8 @@ class _ErrorState extends StatelessWidget {
       ),
       child: Column(
         children: [
-          const Icon(Icons.cloud_off_rounded, size: 28, color: Color(0xFF64748B)),
+          const Icon(Icons.cloud_off_rounded,
+              size: 28, color: Color(0xFF64748B)),
           const SizedBox(height: 10),
           const Text(
             '暂时无法读取日程',
