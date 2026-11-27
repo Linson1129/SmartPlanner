@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import '../models/create_event_input.dart';
+import '../models/delete_result.dart';
 import '../models/schedule_event.dart';
 import 'app_config.dart';
 
@@ -81,6 +82,46 @@ class ApiClient {
       rethrow;
     } catch (_) {
       throw const ApiException('无法创建事件');
+    }
+  }
+
+  Future<ScheduleEvent> completeEvent(int id) async {
+    final uri = Uri.parse('$baseUrl/api/events/$id/complete');
+    try {
+      final response =
+          await _client.patch(uri).timeout(const Duration(seconds: 8));
+      if (response.statusCode < 200 || response.statusCode >= 300) {
+        throw ApiException('服务返回 ${response.statusCode}');
+      }
+      final decoded = jsonDecode(utf8.decode(response.bodyBytes));
+      if (decoded is! Map<String, dynamic>) {
+        throw const ApiException('事件数据格式不正确');
+      }
+      return ScheduleEvent.fromJson(decoded);
+    } on ApiException {
+      rethrow;
+    } catch (_) {
+      throw const ApiException('无法完成事件');
+    }
+  }
+
+  Future<DeleteResult> deleteEvent(int id) async {
+    final uri = Uri.parse('$baseUrl/api/events/$id');
+    try {
+      final response =
+          await _client.delete(uri).timeout(const Duration(seconds: 8));
+      if (response.statusCode < 200 || response.statusCode >= 300) {
+        throw ApiException('服务返回 ${response.statusCode}');
+      }
+      final decoded = jsonDecode(utf8.decode(response.bodyBytes));
+      if (decoded is! Map<String, dynamic>) {
+        throw const ApiException('删除结果格式不正确');
+      }
+      return DeleteResult.fromJson(decoded);
+    } on ApiException {
+      rethrow;
+    } catch (_) {
+      throw const ApiException('无法删除事件');
     }
   }
 

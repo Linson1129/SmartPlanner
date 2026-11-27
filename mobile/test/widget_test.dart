@@ -3,10 +3,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:smartplanner_mobile/app.dart';
 import 'package:smartplanner_mobile/core/planner_repository.dart';
 import 'package:smartplanner_mobile/models/create_event_input.dart';
+import 'package:smartplanner_mobile/models/delete_result.dart';
 import 'package:smartplanner_mobile/models/schedule_event.dart';
 
 class FakePlannerRepository implements PlannerRepository {
   final created = <CreateEventInput>[];
+  final completedIds = <int>[];
+  final deletedIds = <int>[];
   final _events = <ScheduleEvent>[
     ScheduleEvent(
       id: 1,
@@ -38,6 +41,32 @@ class FakePlannerRepository implements PlannerRepository {
     );
     _events.add(event);
     return event;
+  }
+
+  @override
+  Future<ScheduleEvent> completeEvent(int id) async {
+    completedIds.add(id);
+    final index = _events.indexWhere((event) => event.id == id);
+    final event = _events[index];
+    final completed = ScheduleEvent(
+      id: event.id,
+      title: event.title,
+      type: event.type,
+      priority: event.priority,
+      status: 'DONE',
+      startAt: event.startAt,
+      endAt: event.endAt,
+      location: event.location,
+    );
+    _events[index] = completed;
+    return completed;
+  }
+
+  @override
+  Future<DeleteResult> deleteEvent(int id) async {
+    deletedIds.add(id);
+    _events.removeWhere((event) => event.id == id);
+    return DeleteResult(id: id, detachedChildren: 0);
   }
 }
 
@@ -71,5 +100,38 @@ void main() {
     expect(repository.created, hasLength(1));
     expect(repository.created.single.title, '移动端新会议');
     expect(find.text('移动端新会议'), findsOneWidget);
+  });
+
+  testWidgets('completes an event from the detail sheet', (tester) async {
+    final repository = FakePlannerRepository();
+    await tester.pumpWidget(SmartPlannerApp(repository: repository));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('团队同步'));
+    await tester.pumpAndSettle();
+    expect(find.text('标记完成'), findsOneWidget);
+
+    await tester.tap(find.text('标记完成'));
+    await tester.pumpAndSettle();
+
+    expect(repository.completedIds, [1]);
+  });
+
+  testWidgets('deletes an event from the detail sheet', (tester) async {
+    final repository = FakePlannerRepository();
+    await tester.pumpWidget(SmartPlannerApp(repository: repository));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('团队同步'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('删除'));
+    await tester.pumpAndSettle();
+    expect(find.text('删除这个事件？'), findsOneWidget);
+
+    await tester.tap(find.widgetWithText(FilledButton, '删除'));
+    await tester.pumpAndSettle();
+
+    expect(repository.deletedIds, [1]);
+    expect(find.text('团队同步'), findsNothing);
   });
 }

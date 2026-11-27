@@ -166,7 +166,7 @@ cd web && pnpm test
 - Python：38 passed
 - Java：11 passed
 - Vitest：17 passed
-- Flutter：3 passed
+- Flutter：7 passed
 - 冒烟：18 checks
 
 详细说明见 [docs/TEST-REPORT.md](docs/TEST-REPORT.md)。

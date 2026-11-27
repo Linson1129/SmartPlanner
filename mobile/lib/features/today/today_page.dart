@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../core/planner_repository.dart';
 import '../../models/schedule_event.dart';
 import '../create/create_event_sheet.dart';
+import '../detail/event_detail_sheet.dart';
 
 class TodayPage extends StatefulWidget {
   const TodayPage({required this.repository, super.key});
@@ -39,6 +40,21 @@ class _TodayPageState extends State<TodayPage> {
       builder: (context) => CreateEventSheet(repository: widget.repository),
     );
     if (created != null) {
+      await _reload();
+    }
+  }
+
+  Future<void> _openDetail(ScheduleEvent event) async {
+    final changed = await showModalBottomSheet<bool>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      builder: (context) => EventDetailSheet(
+        repository: widget.repository,
+        event: event,
+      ),
+    );
+    if (changed == true) {
       await _reload();
     }
   }
@@ -110,7 +126,10 @@ class _TodayPageState extends State<TodayPage> {
                 return Column(
                   children: [
                     for (final event in events) ...[
-                      _EventCard(event: event),
+                      _EventCard(
+                        event: event,
+                        onTap: () => _openDetail(event),
+                      ),
                       const SizedBox(height: 10),
                     ],
                   ],
@@ -125,66 +144,75 @@ class _TodayPageState extends State<TodayPage> {
 }
 
 class _EventCard extends StatelessWidget {
-  const _EventCard({required this.event});
+  const _EventCard({required this.event, required this.onTap});
 
   final ScheduleEvent event;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final color = _eventColor(event.type);
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
+    return Material(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(12),
+      child: InkWell(
+        onTap: onTap,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFE5E7EB)),
-      ),
-      padding: const EdgeInsets.fromLTRB(12, 12, 12, 11),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: 4,
-            height: 42,
-            decoration: BoxDecoration(
-              color: color,
-              borderRadius: BorderRadius.circular(2),
-            ),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: const Color(0xFFE5E7EB)),
           ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  event.title,
-                  style: const TextStyle(
-                    color: Color(0xFF111827),
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                  ),
+          padding: const EdgeInsets.fromLTRB(12, 12, 12, 11),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 4,
+                height: 42,
+                decoration: BoxDecoration(
+                  color: color,
+                  borderRadius: BorderRadius.circular(2),
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  _timeRange(event),
-                  style: const TextStyle(
-                    color: Color(0xFF64748B),
-                    fontSize: 12,
-                  ),
-                ),
-                if (event.location != null && event.location!.isNotEmpty) ...[
-                  const SizedBox(height: 2),
-                  Text(
-                    event.location!,
-                    style: const TextStyle(
-                      color: Color(0xFF94A3B8),
-                      fontSize: 11,
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      event.title,
+                      style: const TextStyle(
+                        color: Color(0xFF111827),
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
-                ],
-              ],
-            ),
+                    const SizedBox(height: 4),
+                    Text(
+                      _timeRange(event),
+                      style: const TextStyle(
+                        color: Color(0xFF64748B),
+                        fontSize: 12,
+                      ),
+                    ),
+                    if (event.location != null &&
+                        event.location!.isNotEmpty) ...[
+                      const SizedBox(height: 2),
+                      Text(
+                        event.location!,
+                        style: const TextStyle(
+                          color: Color(0xFF94A3B8),
+                          fontSize: 11,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

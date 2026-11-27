@@ -65,4 +65,59 @@ void main() {
     expect(event.title, '移动端新会议');
     expect(event.priority, 'HIGH');
   });
+
+  test('completeEvent patches the complete endpoint', () async {
+    late http.Request captured;
+    final client = ApiClient(
+      baseUrl: 'http://127.0.0.1:8080',
+      client: MockClient((request) async {
+        captured = request;
+        return http.Response(
+          jsonEncode({
+            'id': 7,
+            'title': '团队同步',
+            'notes': '',
+            'type': 'NORMAL',
+            'priority': 'MEDIUM',
+            'status': 'DONE',
+            'startAt': '2026-11-27T10:00:00',
+            'endAt': '2026-11-27T11:00:00',
+            'dueAt': null,
+            'parentId': null,
+            'location': null,
+            'weatherSensitive': false,
+            'lookaheadDays': 0,
+          }),
+          200,
+          headers: {'content-type': 'application/json'},
+        );
+      }),
+    );
+
+    final event = await client.completeEvent(7);
+    expect(captured.method, 'PATCH');
+    expect(captured.url.path, '/api/events/7/complete');
+    expect(event.status, 'DONE');
+  });
+
+  test('deleteEvent calls the event endpoint and parses the result', () async {
+    late http.Request captured;
+    final client = ApiClient(
+      baseUrl: 'http://127.0.0.1:8080',
+      client: MockClient((request) async {
+        captured = request;
+        return http.Response(
+          jsonEncode({'id': 7, 'detachedChildren': 0}),
+          200,
+          headers: {'content-type': 'application/json'},
+        );
+      }),
+    );
+
+    final result = await client.deleteEvent(7);
+    expect(captured.method, 'DELETE');
+    expect(captured.url.path, '/api/events/7');
+    expect(result.id, 7);
+    expect(result.detachedChildren, 0);
+  });
 }
