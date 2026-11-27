@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS user_profile (
   expected_finish_time TIME(6) NOT NULL,
   holiday_mode ENUM('OFF', 'SOFT', 'AVOID') NOT NULL,
   holiday_region ENUM('CN', 'MO') NOT NULL,
+  weather_province VARCHAR(30) NULL,
   idle_threshold_seconds INT NOT NULL,
   demo_seeded BOOLEAN NOT NULL,
   created_at DATETIME(6) NOT NULL,

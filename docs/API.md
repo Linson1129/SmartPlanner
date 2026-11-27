@@ -206,6 +206,7 @@
   "expectedFinishAt": "2026-11-05T22:00:00",
   "holidayMode": "SOFT",
   "holidayRegion": "MO",
+  "weatherProvince": "MACAU",
   "idleThresholdSeconds": 90,
   "demoSeeded": true
 }
@@ -219,11 +220,12 @@
   "expectedFinishTime": "22:00",
   "holidayMode": "SOFT",
   "holidayRegion": "MO",
+  "weatherProvince": "MACAU",
   "idleThresholdSeconds": 90
 }
 ```
 
-`idleThresholdSeconds` 范围 20–600；`expectedFinishTime` 格式 `HH:mm`。
+`weatherProvince` 使用省级代码，例如 `BEIJING`、`GUANGDONG`、`MACAU`；`idleThresholdSeconds` 范围 20–600；`expectedFinishTime` 格式 `HH:mm`。
 
 ## 节假日
 
@@ -326,17 +328,17 @@ Spring Boot Actuator 健康检查，返回 `{"status":"UP"}`。
 
 ## 天气
 
-### `GET /api/weather?from=2026-11-06&to=2026-11-20`
+### `GET /api/weather?from=2026-11-06&to=2026-11-20&province=BEIJING`
 
-查询从今天起最多 15 天的预报；`from` / `to` 为可选 ISO 日期，默认今天到 +6 天。Java 缓存 30 分钟，Python 适配 Open-Meteo。
+查询从今天起最多 15 天的省级预报；`from` / `to` 为可选 ISO 日期，默认今天到 +6 天；`province` 为可选省级代码，默认 `MACAU`，支持 34 个省级行政区。Java 缓存 30 分钟，Python 适配 Open-Meteo。
 
 ```json
 {
   "available": true,
-  "city": "澳门",
-  "latitude": 22.1987,
-  "longitude": 113.5439,
-  "timezone": "Asia/Macau",
+  "city": "北京",
+  "latitude": 39.9042,
+  "longitude": 116.4074,
+  "timezone": "Asia/Shanghai",
   "days": [
     {
       "date": "2026-11-06",

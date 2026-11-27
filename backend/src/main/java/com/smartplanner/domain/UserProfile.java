@@ -39,6 +39,10 @@ public class UserProfile {
     @Column(name = "holiday_region", nullable = false, length = 10)
     private HolidayRegion holidayRegion = HolidayRegion.MO;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "weather_province", length = 30)
+    private WeatherProvince weatherProvince = WeatherProvince.MACAU;
+
     @Column(name = "idle_threshold_seconds", nullable = false)
     private int idleThresholdSeconds = 90;
 

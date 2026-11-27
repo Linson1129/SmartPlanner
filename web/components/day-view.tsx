@@ -18,6 +18,7 @@ interface DayViewProps {
   now: Date;
   holiday: Holiday | null;
   weatherDay: WeatherDay | null;
+  weatherCity: string | null;
   loading: boolean;
   onCreateAt: (start: Date, priority: Priority, type?: EventType) => void;
   onOpenEvent: (event: ScheduleEvent) => void;
@@ -30,7 +31,7 @@ const LANE_META: Record<Priority, { label: string; english: string }> = {
   LOW: { label: "低优先", english: "LIGHT" },
 };
 
-export function DayView({ events, date, now, holiday, weatherDay, loading, onCreateAt, onOpenEvent, onMoveEvent }: DayViewProps) {
+export function DayView({ events, date, now, holiday, weatherDay, weatherCity, loading, onCreateAt, onOpenEvent, onMoveEvent }: DayViewProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const layout = useMemo(() => layoutDay(events, date, now), [events, date, now]);
   const isToday = isSameDay(date, now);
@@ -84,7 +85,7 @@ export function DayView({ events, date, now, holiday, weatherDay, loading, onCre
         ))}
         <span className="legend-item legend-now"><i />现在</span>
         <div className="legend-actions">
-          {weatherDay ? <WeatherChip day={weatherDay} /> : null}
+          {weatherDay ? <WeatherChip day={weatherDay} city={weatherCity} /> : null}
           {holiday ? <span className="holiday-banner"><i />{holiday.name}</span> : null}
           <Button size="small" variant="outlined" onClick={scrollToNow} startIcon={<LocateFixed size={14} />}>
             {isToday ? "回到现在" : "从早上看起"}
@@ -94,7 +95,7 @@ export function DayView({ events, date, now, holiday, weatherDay, loading, onCre
 
       {weatherDay && weatherIsWet(weatherDay) && events.some((event) => event.weatherSensitive && event.status !== "CANCELLED") ? (
         <div className="weather-advisory">
-          <WeatherChip day={weatherDay} compact />
+          <WeatherChip day={weatherDay} city={weatherCity} compact />
           <span>有降水，天气敏感安排可能受影响</span>
         </div>
       ) : null}

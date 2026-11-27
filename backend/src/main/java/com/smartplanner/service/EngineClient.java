@@ -65,12 +65,23 @@ public class EngineClient {
         }
     }
 
-    public EngineDtos.WeatherResponse weather(java.time.LocalDate from, java.time.LocalDate to) {
+    public EngineDtos.WeatherResponse weather(
+            java.time.LocalDate from,
+            java.time.LocalDate to,
+            double latitude,
+            double longitude,
+            String timezone,
+            String city
+    ) {
         try {
             EngineDtos.WeatherResponse response = client.get()
                     .uri(uriBuilder -> uriBuilder.path("/weather")
                             .queryParam("from", from)
                             .queryParam("to", to)
+                            .queryParam("latitude", latitude)
+                            .queryParam("longitude", longitude)
+                            .queryParam("timezone", timezone)
+                            .queryParam("city", city)
                             .build())
                     .retrieve()
                     .body(EngineDtos.WeatherResponse.class);

@@ -18,7 +18,7 @@ export function WeatherIcon({ code, size = 14 }: { code: number; size?: number }
   return <CloudSun {...props} />;
 }
 
-export function WeatherChip({ day, compact = false }: { day: WeatherDay; compact?: boolean }) {
+export function WeatherChip({ day, city, compact = false }: { day: WeatherDay; city?: string | null; compact?: boolean }) {
   const rain = day.precipitationProbability ?? 0;
   const wet = day.rainy || day.snowy || day.stormy;
   return (
@@ -29,6 +29,7 @@ export function WeatherChip({ day, compact = false }: { day: WeatherDay; compact
       icon={<WeatherIcon code={day.code} size={compact ? 12 : 14} />}
       label={(
         <Stack direction="row" spacing={0.5} sx={{ alignItems: "center" }}>
+          {!compact && city ? <Typography component="span" sx={{ fontSize: 10, color: "text.secondary" }}>{city}</Typography> : null}
           {!compact ? <Typography component="span" sx={{ fontSize: 11 }}>{day.condition}</Typography> : null}
           {day.tempMax !== null ? <Typography component="span" sx={{ fontSize: 11, fontWeight: 700 }}>{Math.round(day.tempMax)}°</Typography> : null}
           {rain > 0 ? (
@@ -39,7 +40,7 @@ export function WeatherChip({ day, compact = false }: { day: WeatherDay; compact
           ) : null}
         </Stack>
       )}
-      title={`${day.condition} · ${day.tempMin ?? "-"}–${day.tempMax ?? "-"}°C · 降雨 ${rain}%`}
+      title={`${city ? `${city} · ` : ""}${day.condition} · ${day.tempMin ?? "-"}–${day.tempMax ?? "-"}°C · 降雨 ${rain}%`}
       sx={{ height: 28, "& .MuiChip-icon": { ml: 0.75 } }}
     />
   );

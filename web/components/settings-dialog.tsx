@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Check, Clock3, Flag, Landmark, Settings2, X } from "lucide-react";
 import type { HolidayMode, HolidayRegion, Profile, SystemStatus } from "@/lib/types";
 import { fetchSystemStatus, updateProfile, ApiRequestError } from "@/lib/api";
+import { DEFAULT_WEATHER_PROVINCE, WEATHER_PROVINCES } from "@/lib/weather-provinces";
 import { Spinner } from "./ui";
 
 interface SettingsDialogProps {
@@ -25,6 +26,7 @@ export function SettingsDialog({ open, profile, onClose, onSaved }: SettingsDial
   const [expectedFinishTime, setExpectedFinishTime] = useState("22:00");
   const [holidayMode, setHolidayMode] = useState<HolidayMode>("SOFT");
   const [holidayRegion, setHolidayRegion] = useState<HolidayRegion>("MO");
+  const [weatherProvince, setWeatherProvince] = useState(DEFAULT_WEATHER_PROVINCE);
   const [idleThreshold, setIdleThreshold] = useState(90);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -37,6 +39,7 @@ export function SettingsDialog({ open, profile, onClose, onSaved }: SettingsDial
     setExpectedFinishTime(profile.expectedFinishTime);
     setHolidayMode(profile.holidayMode);
     setHolidayRegion(profile.holidayRegion);
+    setWeatherProvince(profile.weatherProvince ?? DEFAULT_WEATHER_PROVINCE);
     setIdleThreshold(profile.idleThresholdSeconds);
     setError(null);
     setSaving(false);
@@ -69,6 +72,7 @@ export function SettingsDialog({ open, profile, onClose, onSaved }: SettingsDial
         expectedFinishTime,
         holidayMode,
         holidayRegion,
+        weatherProvince,
         idleThresholdSeconds: idleThreshold,
       });
       onSaved(updated);
@@ -120,6 +124,14 @@ export function SettingsDialog({ open, profile, onClose, onSaved }: SettingsDial
                 </div>
               </div>
             </div>
+            <label className="settings-field weather-province-field">
+              <span>天气省份</span>
+              <select value={weatherProvince} onChange={(event) => setWeatherProvince(event.target.value)}>
+                {WEATHER_PROVINCES.map((province) => (
+                  <option key={province.code} value={province.code}>{province.label}</option>
+                ))}
+              </select>
+            </label>
             <div className="settings-field range-field">
               <div className="range-head">
                 <span>多久无操作视为离开</span>

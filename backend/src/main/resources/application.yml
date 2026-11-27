@@ -45,11 +45,6 @@ smartplanner:
     base-url: ${SMARTPLANNER_ENGINE_URL:http://127.0.0.1:8000}
   cors:
     allowed-origins: ${SMARTPLANNER_CORS_ORIGINS:http://localhost:3000,http://127.0.0.1:3000,http://localhost:3001,http://127.0.0.1:3001}
-  weather:
-    city: ${SMARTPLANNER_WEATHER_CITY:澳门}
-    latitude: ${SMARTPLANNER_WEATHER_LATITUDE:22.1987}
-    longitude: ${SMARTPLANNER_WEATHER_LONGITUDE:113.5439}
-    timezone: ${SMARTPLANNER_WEATHER_TIMEZONE:Asia/Macau}
   seed:
     enabled: ${SMARTPLANNER_SEED_ENABLED:true}
 

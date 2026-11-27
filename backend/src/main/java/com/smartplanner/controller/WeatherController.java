@@ -1,5 +1,6 @@
 package com.smartplanner.controller;
 
+import com.smartplanner.domain.WeatherProvince;
 import com.smartplanner.dto.WeatherDto;
 import com.smartplanner.service.WeatherService;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -28,10 +29,11 @@ public class WeatherController {
             @RequestParam(required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
             @RequestParam(required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to,
+            @RequestParam(defaultValue = "MACAU") WeatherProvince province
     ) {
         LocalDate start = from != null ? from : LocalDate.now(clock);
         LocalDate end = to != null ? to : start.plusDays(6);
-        return weatherService.forecast(start, end);
+        return weatherService.forecast(start, end, province);
     }
 }

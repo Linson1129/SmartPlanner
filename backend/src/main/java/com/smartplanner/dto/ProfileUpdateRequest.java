@@ -2,6 +2,7 @@ package com.smartplanner.dto;
 
 import com.smartplanner.domain.HolidayMode;
 import com.smartplanner.domain.HolidayRegion;
+import com.smartplanner.domain.WeatherProvince;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -20,6 +21,7 @@ public record ProfileUpdateRequest(
 
         @NotNull HolidayMode holidayMode,
         @NotNull HolidayRegion holidayRegion,
+        @NotNull WeatherProvince weatherProvince,
         @Min(value = 20, message = "活跃判定不能少于 20 秒")
         @Max(value = 600, message = "活跃判定不能超过 600 秒")
         int idleThresholdSeconds

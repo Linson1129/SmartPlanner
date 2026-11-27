@@ -16,7 +16,7 @@
 | --- | --- | --- |
 | Python engine | `cd engine && .venv/bin/pytest` | 38 passed |
 | Java API | `cd backend && mvn test` | 11 passed |
-| Frontend | `cd web && pnpm test` | 17 passed |
+| Frontend | `cd web && pnpm test` | 19 passed |
 | Flutter mobile | `cd mobile && flutter test` | 7 passed |
 | Production build | `cd web && pnpm build` | passed |
 | Smoke | `./scripts/smoke.sh` | 18 checks passed |
@@ -31,7 +31,7 @@
 - DDL warnings and expected finish time.
 - Goal completion converts a goal into a container and records completed time.
 - Soft/strong reminder selection based on browser presence.
-- Weather mapping, fallback behavior and weather-sensitive event fields.
+- Weather mapping, province selection, fallback behavior and weather-sensitive event fields.
 - Chinese date/time/range parsing, past-time rollover and quick-add defaults.
 - Day/week/month layout calculations and cross-day event segmentation.
 

@@ -92,6 +92,7 @@ export interface Profile {
   expectedFinishAt: string;
   holidayMode: HolidayMode;
   holidayRegion: HolidayRegion;
+  weatherProvince: string;
   idleThresholdSeconds: number;
   demoSeeded: boolean;
 }

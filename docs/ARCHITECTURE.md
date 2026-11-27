@@ -179,10 +179,10 @@ erDiagram
 
 ### 天气
 
-- 浏览器请求 Java 的 `/api/weather?from&to`，不会直接访问 Open-Meteo；
+- 浏览器请求 Java 的 `/api/weather?from&to&province`，不会直接访问 Open-Meteo；
 - Java 的 `WeatherService` 按日期范围缓存 30 分钟，再调用 Python 的 `/weather`；
 - Python 的 `app/weather.py` 负责 HTTP 调用、WMO 天气码到中文条件/降水标记的映射，以及失败降级；
-- 当前默认坐标澳门（22.1987, 113.5439）；可以用 `smartplanner.weather.*` 覆盖；
+- 天气按省级行政区切换，默认澳门；Java 使用省会坐标调用 Open-Meteo，34 个省级行政区均有对应坐标；
 - 前端拉取从今天起的 15 天预报，用于日/周视图和事件关注窗口；服务不可用时 `available=false`，不阻塞 CRUD；
 - 事件字段 `weather_sensitive` + `lookahead_days` 表示“在意天气、提前 N 天关注”；保存时前端在关注窗口内检查降水并提示；
 - 天气是外部依赖，没有 API key；压测不把外部延迟计入核心 API 指标。

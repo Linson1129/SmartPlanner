@@ -2,6 +2,7 @@ package com.smartplanner.service;
 
 import com.smartplanner.common.BadRequestException;
 import com.smartplanner.domain.UserProfile;
+import com.smartplanner.domain.WeatherProvince;
 import com.smartplanner.dto.ProfileDto;
 import com.smartplanner.dto.ProfileUpdateRequest;
 import com.smartplanner.repository.UserProfileRepository;
@@ -55,6 +56,7 @@ public class ProfileService {
         profile.setExpectedFinishTime(expectedFinishTime);
         profile.setHolidayMode(request.holidayMode());
         profile.setHolidayRegion(request.holidayRegion());
+        profile.setWeatherProvince(request.weatherProvince());
         profile.setIdleThresholdSeconds(request.idleThresholdSeconds());
         return toDto(repository.save(profile));
     }
@@ -82,6 +84,7 @@ public class ProfileService {
                 today.atTime(profile.getExpectedFinishTime()),
                 profile.getHolidayMode(),
                 profile.getHolidayRegion(),
+                profile.getWeatherProvince() == null ? WeatherProvince.MACAU : profile.getWeatherProvince(),
                 profile.getIdleThresholdSeconds(),
                 profile.isDemoSeeded()
         );

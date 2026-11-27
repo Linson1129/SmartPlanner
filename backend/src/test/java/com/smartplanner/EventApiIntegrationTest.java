@@ -27,6 +27,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -72,7 +73,7 @@ class EventApiIntegrationTest {
                 new EngineDtos.HolidayResponse(2026, "MO", List.of())
         );
         when(engineClient.isHealthy()).thenReturn(true);
-        when(engineClient.weather(any(), any())).thenReturn(new EngineDtos.WeatherResponse(
+        when(engineClient.weather(any(), any(), anyDouble(), anyDouble(), anyString(), anyString())).thenReturn(new EngineDtos.WeatherResponse(
                 true,
                 "澳门",
                 22.1987,
@@ -274,6 +275,7 @@ class EventApiIntegrationTest {
                                   "expectedFinishTime":"23:15",
                                   "holidayMode":"AVOID",
                                   "holidayRegion":"CN",
+                                  "weatherProvince":"BEIJING",
                                   "idleThresholdSeconds":45
                                 }
                                 """))
@@ -281,7 +283,8 @@ class EventApiIntegrationTest {
                 .andExpect(jsonPath("$.displayName", is("阿恒")))
                 .andExpect(jsonPath("$.expectedFinishTime", is("23:15")))
                 .andExpect(jsonPath("$.holidayMode", is("AVOID")))
-                .andExpect(jsonPath("$.holidayRegion", is("CN")));
+                .andExpect(jsonPath("$.holidayRegion", is("CN")))
+                .andExpect(jsonPath("$.weatherProvince", is("BEIJING")));
 
         when(engineClient.holidays(2026, "CN")).thenReturn(new EngineDtos.HolidayResponse(
                 2026,
@@ -303,7 +306,8 @@ class EventApiIntegrationTest {
     void weatherAndNlpEndpointsAreExposed() throws Exception {
         mockMvc.perform(get("/api/weather")
                         .param("from", "2026-11-06")
-                        .param("to", "2026-11-08"))
+                        .param("to", "2026-11-08")
+                        .param("province", "BEIJING"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.available", is(true)))
                 .andExpect(jsonPath("$.days[0].condition", is("中雨")))

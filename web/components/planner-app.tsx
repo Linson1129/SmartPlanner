@@ -208,7 +208,11 @@ export function PlannerApp() {
 
   useEffect(() => {
     let ignore = false;
-    fetchWeather(toApiDate(weatherRange.from), toApiDate(weatherRange.to))
+    fetchWeather(
+      toApiDate(weatherRange.from),
+      toApiDate(weatherRange.to),
+      profile?.weatherProvince ?? "MACAU",
+    )
       .then((next) => {
         if (!ignore) setWeather(next);
       })
@@ -218,7 +222,7 @@ export function PlannerApp() {
     return () => {
       ignore = true;
     };
-  }, [weatherRange.from, weatherRange.to, refreshKey]);
+  }, [weatherRange.from, weatherRange.to, profile?.weatherProvince, refreshKey]);
 
   const handleHeartbeat = useCallback((response: HeartbeatResponse) => {
     for (const reminder of response.reminders) {
@@ -599,6 +603,7 @@ export function PlannerApp() {
               now={now}
               holiday={holiday}
               weatherDay={weatherDay}
+              weatherCity={weather?.city ?? null}
               loading={loading}
               onCreateAt={openCreateAt}
               onOpenEvent={openEvent}

@@ -88,6 +88,7 @@ export function updateProfile(payload: {
   expectedFinishTime: string;
   holidayMode: string;
   holidayRegion: string;
+  weatherProvince: string;
   idleThresholdSeconds: number;
 }): Promise<Profile> {
   return request<Profile>("/api/profile", {
@@ -133,8 +134,8 @@ export function moveEvent(
   });
 }
 
-export function fetchWeather(from: string, to: string): Promise<Weather> {
-  return request<Weather>(`/api/weather${query({ from, to })}`);
+export function fetchWeather(from: string, to: string, province = "MACAU"): Promise<Weather> {
+  return request<Weather>(`/api/weather${query({ from, to, province })}`);
 }
 
 export function parseSentence(text: string): Promise<NlpDraft> {
