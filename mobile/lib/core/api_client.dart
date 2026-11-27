@@ -85,6 +85,35 @@ class ApiClient {
     }
   }
 
+  Future<ScheduleEvent> updateEvent(int id, CreateEventInput input) async {
+    final uri = Uri.parse('$baseUrl/api/events/$id');
+    try {
+      final response = await _client
+          .put(
+            uri,
+            headers: const {'Content-Type': 'application/json'},
+            body: jsonEncode(input.toJson()),
+          )
+          .timeout(const Duration(seconds: 8));
+      if (response.statusCode < 200 || response.statusCode >= 300) {
+        throw ApiException('服务返回 ${response.statusCode}');
+      }
+      final decoded = jsonDecode(utf8.decode(response.bodyBytes));
+      if (decoded is! Map<String, dynamic>) {
+        throw const ApiException('事件数据格式不正确');
+      }
+      final event = decoded['event'];
+      if (event is! Map<String, dynamic>) {
+        throw const ApiException('事件数据格式不正确');
+      }
+      return ScheduleEvent.fromJson(event);
+    } on ApiException {
+      rethrow;
+    } catch (_) {
+      throw const ApiException('无法更新事件');
+    }
+  }
+
   Future<ScheduleEvent> completeEvent(int id) async {
     final uri = Uri.parse('$baseUrl/api/events/$id/complete');
     try {

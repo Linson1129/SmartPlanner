@@ -10,6 +10,7 @@ class FakePlannerRepository implements PlannerRepository {
   final created = <CreateEventInput>[];
   final completedIds = <int>[];
   final deletedIds = <int>[];
+  final updatedIds = <int>[];
   final _events = <ScheduleEvent>[
     ScheduleEvent(
       id: 1,
@@ -41,6 +42,25 @@ class FakePlannerRepository implements PlannerRepository {
     );
     _events.add(event);
     return event;
+  }
+
+  @override
+  Future<ScheduleEvent> updateEvent(int id, CreateEventInput input) async {
+    updatedIds.add(id);
+    final index = _events.indexWhere((event) => event.id == id);
+    final current = _events[index];
+    final updated = ScheduleEvent(
+      id: current.id,
+      title: input.title,
+      type: input.type,
+      priority: input.priority,
+      status: current.status,
+      startAt: input.startAt,
+      endAt: input.endAt,
+      location: input.location,
+    );
+    _events[index] = updated;
+    return updated;
   }
 
   @override
@@ -91,7 +111,7 @@ void main() {
     await tester.tap(find.byTooltip('新建事件'));
     await tester.pumpAndSettle();
     await tester.enterText(
-      find.byKey(const ValueKey('create-title')),
+      find.byKey(const ValueKey('event-title')),
       '移动端新会议',
     );
     await tester.tap(find.text('保存'));
@@ -100,6 +120,26 @@ void main() {
     expect(repository.created, hasLength(1));
     expect(repository.created.single.title, '移动端新会议');
     expect(find.text('移动端新会议'), findsOneWidget);
+  });
+
+  testWidgets('edits an event from the detail sheet', (tester) async {
+    final repository = FakePlannerRepository();
+    await tester.pumpWidget(SmartPlannerApp(repository: repository));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('团队同步'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('编辑'));
+    await tester.pumpAndSettle();
+    await tester.enterText(
+      find.byKey(const ValueKey('event-title')),
+      '团队同步（改期）',
+    );
+    await tester.tap(find.text('保存'));
+    await tester.pumpAndSettle();
+
+    expect(repository.updatedIds, [1]);
+    expect(find.text('团队同步（改期）'), findsOneWidget);
   });
 
   testWidgets('completes an event from the detail sheet', (tester) async {

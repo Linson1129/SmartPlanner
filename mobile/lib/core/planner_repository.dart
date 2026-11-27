@@ -8,6 +8,8 @@ abstract class PlannerRepository {
 
   Future<ScheduleEvent> createEvent(CreateEventInput input);
 
+  Future<ScheduleEvent> updateEvent(int id, CreateEventInput input);
+
   Future<ScheduleEvent> completeEvent(int id);
 
   Future<DeleteResult> deleteEvent(int id);
@@ -26,6 +28,11 @@ class ApiPlannerRepository implements PlannerRepository {
   @override
   Future<ScheduleEvent> createEvent(CreateEventInput input) {
     return _client.createEvent(input);
+  }
+
+  @override
+  Future<ScheduleEvent> updateEvent(int id, CreateEventInput input) {
+    return _client.updateEvent(id, input);
   }
 
   @override

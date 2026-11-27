@@ -66,6 +66,60 @@ void main() {
     expect(event.priority, 'HIGH');
   });
 
+  test('updateEvent puts the event payload and parses the result', () async {
+    late http.Request captured;
+    final client = ApiClient(
+      baseUrl: 'http://127.0.0.1:8080',
+      client: MockClient((request) async {
+        captured = request;
+        return http.Response(
+          jsonEncode({
+            'event': {
+              'id': 7,
+              'title': '团队同步（改期）',
+              'notes': '',
+              'type': 'NORMAL',
+              'priority': 'MEDIUM',
+              'status': 'PLANNED',
+              'startAt': '2026-11-27T10:00:00',
+              'endAt': '2026-11-27T11:00:00',
+              'dueAt': null,
+              'parentId': null,
+              'location': null,
+              'weatherSensitive': false,
+              'lookaheadDays': 0,
+            },
+            'analysis': {
+              'engineAvailable': true,
+              'conflicts': [],
+              'holidayWarnings': [],
+              'deadlineWarning': null,
+              'suggestions': [],
+            },
+          }),
+          200,
+          headers: {'content-type': 'application/json'},
+        );
+      }),
+    );
+
+    final event = await client.updateEvent(
+      7,
+      CreateEventInput(
+        title: '团队同步（改期）',
+        type: 'NORMAL',
+        priority: 'MEDIUM',
+        startAt: DateTime(2026, 11, 27, 10),
+        endAt: DateTime(2026, 11, 27, 11),
+      ),
+    );
+
+    expect(captured.method, 'PUT');
+    expect(captured.url.path, '/api/events/7');
+    expect(jsonDecode(captured.body)['title'], '团队同步（改期）');
+    expect(event.title, '团队同步（改期）');
+  });
+
   test('completeEvent patches the complete endpoint', () async {
     late http.Request captured;
     final client = ApiClient(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/planner_repository.dart';
 import '../../models/schedule_event.dart';
+import '../create/event_form_sheet.dart';
 
 class EventDetailSheet extends StatefulWidget {
   const EventDetailSheet({
@@ -67,6 +68,11 @@ class _EventDetailSheetState extends State<EventDetailSheet> {
                   ),
                 ),
                 IconButton(
+                  tooltip: '编辑',
+                  onPressed: _working ? null : _edit,
+                  icon: const Icon(Icons.edit_outlined),
+                ),
+                IconButton(
                   tooltip: '关闭',
                   onPressed: _working ? null : () => Navigator.pop(context),
                   icon: const Icon(Icons.close_rounded),
@@ -125,6 +131,21 @@ class _EventDetailSheetState extends State<EventDetailSheet> {
         ),
       ),
     );
+  }
+
+  Future<void> _edit() async {
+    final updated = await showModalBottomSheet<ScheduleEvent>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      builder: (context) => EventFormSheet(
+        repository: widget.repository,
+        event: widget.event,
+      ),
+    );
+    if (updated != null && mounted) {
+      Navigator.pop(context, true);
+    }
   }
 
   Future<void> _complete() async {

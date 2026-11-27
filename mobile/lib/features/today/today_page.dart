@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/planner_repository.dart';
 import '../../models/schedule_event.dart';
-import '../create/create_event_sheet.dart';
+import '../create/event_form_sheet.dart';
 import '../detail/event_detail_sheet.dart';
 
 class TodayPage extends StatefulWidget {
@@ -37,7 +37,7 @@ class _TodayPageState extends State<TodayPage> {
       isScrollControlled: true,
       useSafeArea: true,
       showDragHandle: false,
-      builder: (context) => CreateEventSheet(repository: widget.repository),
+      builder: (context) => EventFormSheet(repository: widget.repository),
     );
     if (created != null) {
       await _reload();
