@@ -66,6 +66,28 @@ void main() {
     expect(event.priority, 'HIGH');
   });
 
+  test('eventsForRange requests the selected week window', () async {
+    late http.Request captured;
+    final client = ApiClient(
+      baseUrl: 'http://127.0.0.1:8080',
+      client: MockClient((request) async {
+        captured = request;
+        return http.Response('[]', 200,
+            headers: {'content-type': 'application/json'});
+      }),
+    );
+
+    final events = await client.eventsForRange(
+      DateTime(2026, 11, 23),
+      DateTime(2026, 11, 30),
+    );
+
+    expect(events, isEmpty);
+    expect(captured.url.path, '/api/events');
+    expect(captured.url.queryParameters['from'], '2026-11-23T00:00:00');
+    expect(captured.url.queryParameters['to'], '2026-11-30T00:00:00');
+  });
+
   test('updateEvent puts the event payload and parses the result', () async {
     late http.Request captured;
     final client = ApiClient(

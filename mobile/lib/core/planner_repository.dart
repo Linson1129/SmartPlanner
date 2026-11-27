@@ -6,6 +6,8 @@ import 'api_client.dart';
 abstract class PlannerRepository {
   Future<List<ScheduleEvent>> eventsForDay(DateTime day);
 
+  Future<List<ScheduleEvent>> eventsForRange(DateTime from, DateTime to);
+
   Future<ScheduleEvent> createEvent(CreateEventInput input);
 
   Future<ScheduleEvent> updateEvent(int id, CreateEventInput input);
@@ -23,6 +25,11 @@ class ApiPlannerRepository implements PlannerRepository {
   @override
   Future<List<ScheduleEvent>> eventsForDay(DateTime day) {
     return _client.eventsForDay(day);
+  }
+
+  @override
+  Future<List<ScheduleEvent>> eventsForRange(DateTime from, DateTime to) {
+    return _client.eventsForRange(from, to);
   }
 
   @override

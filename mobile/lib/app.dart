@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'core/planner_repository.dart';
 import 'features/placeholders/placeholder_page.dart';
 import 'features/today/today_page.dart';
+import 'features/week/week_page.dart';
 
 class SmartPlannerApp extends StatefulWidget {
   const SmartPlannerApp({required this.repository, super.key});
@@ -48,10 +49,7 @@ class _SmartPlannerAppState extends State<SmartPlannerApp> {
           index: _index,
           children: [
             TodayPage(repository: widget.repository),
-            const PlaceholderPage(
-              title: '周视图',
-              icon: Icons.calendar_view_week_rounded,
-            ),
+            WeekPage(repository: widget.repository),
             const PlaceholderPage(
               title: '设置',
               icon: Icons.tune_rounded,

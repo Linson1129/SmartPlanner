@@ -25,13 +25,19 @@ class ApiClient {
   final http.Client _client;
   final String baseUrl;
 
-  Future<List<ScheduleEvent>> eventsForDay(DateTime day) async {
+  Future<List<ScheduleEvent>> eventsForDay(DateTime day) {
     final start = DateTime(day.year, day.month, day.day);
-    final end = start.add(const Duration(days: 1));
+    return eventsForRange(start, start.add(const Duration(days: 1)));
+  }
+
+  Future<List<ScheduleEvent>> eventsForRange(
+    DateTime from,
+    DateTime to,
+  ) async {
     final uri = Uri.parse('$baseUrl/api/events').replace(
       queryParameters: {
-        'from': _apiDate(start),
-        'to': _apiDate(end),
+        'from': _apiDate(from),
+        'to': _apiDate(to),
       },
     );
 

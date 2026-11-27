@@ -28,6 +28,17 @@ class FakePlannerRepository implements PlannerRepository {
   Future<List<ScheduleEvent>> eventsForDay(DateTime day) async => _events;
 
   @override
+  Future<List<ScheduleEvent>> eventsForRange(
+    DateTime from,
+    DateTime to,
+  ) async {
+    return _events
+        .where((event) =>
+            !event.startAt.isBefore(from) && event.startAt.isBefore(to))
+        .toList();
+  }
+
+  @override
   Future<ScheduleEvent> createEvent(CreateEventInput input) async {
     created.add(input);
     final event = ScheduleEvent(
@@ -91,6 +102,21 @@ class FakePlannerRepository implements PlannerRepository {
 }
 
 void main() {
+  testWidgets('shows the week view with the current week events',
+      (tester) async {
+    await tester.pumpWidget(
+      SmartPlannerApp(repository: FakePlannerRepository()),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('周视图').last);
+    await tester.pumpAndSettle();
+
+    expect(find.text('周三'), findsOneWidget);
+    expect(find.text('团队同步'), findsOneWidget);
+    expect(find.text('11 月 23 日 — 11 月 29 日'), findsOneWidget);
+  });
+
   testWidgets('shows the mobile skeleton and today event', (tester) async {
     await tester.pumpWidget(
       SmartPlannerApp(repository: FakePlannerRepository()),
